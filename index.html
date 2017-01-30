@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../docs-assets/ico/favicon.png">
+
+    <title>DataCal </title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+
+
+    <!-- Custom styles for this template -->
+    <link href="assets/css/main.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="assets/js/hover.zoom.js"></script>
+    <script src="assets/js/hover.zoom.conf.js"></script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <!-- Static navbar -->
+    <div class="navbar navbar-inverse navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html">DataCal</a>
+        </div>
+        <div class="navbar-collapse collapse">
+ 
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+	<!-- +++++ Welcome Section +++++ -->
+	<div id="ww">
+	    <div class="container">
+			<div class="row">
+				<div class="col-lg-8 col-lg-offset-2 centered">
+					<img src="assets/img/haraambae.png" alt="California Bear">
+					<h1>Welcome to DataCal!</h1>
+					<p>DataCal is a website that visualizes government data from California based on counties. Our goal is to create a centralized application so that you can easily track the health of a prospective county.</p>
+				
+				</div><!-- /col-lg-8 -->
+			</div><!-- /row -->
+	    </div> <!-- /container -->
+	</div><!-- /ww -->
+	
+	
+	<div id="map"></div>
+    <script>
+      var map;
+      var layers = [];
+      var lastLayer;
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 38, lng: -119.4179},
+          zoom: 6
+        });
+
+        layers[0] = new google.maps.FusionTablesLayer({
+          query: {
+            select: 'Geometry',
+            from: '1N3UynbqhUa_GrZfrPfcVNT3pxY7Otlg2UX7eQKqQ'
+          },
+          styles:[{
+            polygonOptions: {
+              fillColor: '#ffffe6',
+              fillOpacity: 0.085
+            }
+          }]
+        });
+
+        layers[1] = new google.maps.FusionTablesLayer({
+          query: {
+            select: 'geometry',
+            from: '1VuHWESiH6UOVd7OAYUFvEzJqNOEDCFAWQ2SwItC0'
+          },
+          styles:[{
+            polygonOptions: {
+              fillColor: '#ff6600',
+              fillOpacity: 0.5
+            }
+          },{
+            where: 'Poverty < 32.4',
+            polygonOptions:{
+              fillColor: '#1a001a',
+              fillOpacity: 0.7
+            }
+          },{
+            where: 'Poverty >= 32.4',
+            polygonOptions:{
+              fillColor: '#800080',
+              fillOpacity: 0.5
+            }
+          },{
+            where: 'Poverty > 36.8',
+            polygonOptions:{
+              fillColor: '#ff00ff',
+              fillOpacity: 0.5
+            }
+          },{
+            where: 'Poverty > 39.6',
+            polygonOptions:{
+              fillColor:'#ff66ff',
+              fillOpacity: 0.5
+            }
+          }]
+        });
+
+        layers[2] = new google.maps.FusionTablesLayer({
+          query: {
+            select: 'geometry',
+            from: '1VuHWESiH6UOVd7OAYUFvEzJqNOEDCFAWQ2SwItC0'
+          },
+          styles:[{
+            polygonOptions: {
+              fillColor: '#ffffe6',
+              fillOpacity: 0.5
+            }
+          },{
+            where: 'Traffic < 380',
+            polygonOptions:{
+              fillColor: '#ffff1a',
+              fillOpacity: 0.5
+            }
+          },{
+            where: 'Traffic >= 380',
+            polygonOptions:{
+              fillColor: '#ff9900',
+              fillOpacity: 0.5
+            }
+          },{
+            where: 'Traffic > 730',
+            polygonOptions:{
+              fillColor: '#ff3300',
+              fillOpacity: 0.5
+            }
+          },{
+            where: 'Traffic > 1080',
+            polygonOptions:{
+              fillColor:'#800000',
+              fillOpacity: 0.5
+            }
+          }]
+        });
+
+        layers[3] = new google.maps.FusionTablesLayer({
+          query: {
+            select: 'geometry',
+            from: '1VuHWESiH6UOVd7OAYUFvEzJqNOEDCFAWQ2SwItC0'
+          },
+          styles:[{
+            polygonOptions: {
+              fillColor: '#ffffe6',
+              fillOpacity: 0.5
+            }
+          },{
+            where: 'PM < 6',
+            polygonOptions:{
+              fillColor: '#4dff4d',
+              fillOpacity: 0.5
+            }
+          },{
+            where: 'PM >= 6',
+            polygonOptions:{
+              fillColor: '#00b300',
+              fillOpacity: 0.5
+            }
+          },{
+            where: 'PM > 9',
+            polygonOptions:{
+              fillColor: '#006600',
+              fillOpacity: 0.5
+            }
+          },{
+            where: 'PM > 11',
+            polygonOptions:{
+              fillColor:'#001a00',
+              fillOpacity: 0.5
+            }
+          }]
+        });
+
+        layers[4] = new google.maps.FusionTablesLayer({
+          query: {
+            select: 'geometry',
+            from: '1VuHWESiH6UOVd7OAYUFvEzJqNOEDCFAWQ2SwItC0'
+          },
+          styles:[{
+            polygonOptions: {
+              fillColor: '#ff1a1a',
+              fillOpacity: 0.2
+            }
+          },{
+            where: 'Water < 290',
+            polygonOptions:{
+              fillColor: '#6666ff',
+              fillOpacity: 0.7
+            }
+          },{
+            where: 'Water >= 290',
+            polygonOptions:{
+              fillColor: '#0000ff',
+              fillOpacity: 0.7
+            }
+          },{
+            where: 'Water > 410',
+            polygonOptions:{
+              fillColor: '#000080',
+              fillOpacity: 0.7
+            }
+          },{
+            where: 'Water > 530',
+            polygonOptions:{
+              fillColor:'#000033',
+              fillOpacity: 0.7
+            }
+          }]
+        });
+
+        layers[5] = new google.maps.FusionTablesLayer({
+          query: {
+            select: 'Geometry',
+            from: '1N3UynbqhUa_GrZfrPfcVNT3pxY7Otlg2UX7eQKqQ'
+          },
+          styles:[{
+            polygonOptions: {
+              fillColor: '#ff1a1a',
+              fillOpacity: 0.1
+            }
+          },{
+            where: 'Crime1000 < 250',
+            polygonOptions:{
+              fillColor: '#ff6600',
+              fillOpacity: 0.1
+            }
+          },{
+            where: 'Crime1000 >= 250',
+            polygonOptions:{
+              fillColor: '#e62e00',
+              fillOpacity: 0.1
+            }
+          },{
+            where: 'Crime1000 > 500',
+            polygonOptions:{
+              fillColor: '#800000',
+              fillOpacity: 0.1
+            }
+          },{
+            where: 'Crime1000 > 610',
+            polygonOptions:{
+              fillColor:'#330000',
+              fillOpacity: 0.1
+            }
+          }]
+        });
+
+        layers[0].setMap(map);
+        lastLayer = 0;
+        document.getElementById("county").checked = true;
+      }
+
+      function selectLayer(val) {
+        layers[lastLayer].setMap(null);
+        layers[val].setMap(map);
+        lastLayer=val;
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYO9N_fKuAAqZU3gUkOpLASeU9nTKVHg4&callback=initMap">
+    </script>
+	
+	<div id="form">
+	
+    <form>
+      <input type="radio" name="layer" id="county" value="0" onclick="selectLayer(this.value)" checked="checked">County<br>
+      <input type="radio" name="layer" id="income" value="1" onclick="selectLayer(this.value)">Income<br>
+      <input type="radio" name="layer" id="traffic" value="2" onclick="selectLayer(this.value)">Traffic<br>
+      <input type="radio" name="layer" id="air" value="3" onclick="selectLayer(this.value)">Air Quality (PM 2.5)<br>
+      <input type="radio" name="layer" id="water" value = "4" onclick="selectLayer(this.value)">Water Quality<br>
+      <input type="radio" name="layer" id="income" value = "5" onclick="selectLayer(this.value)">Crime
+    </form>
+	</div>
+	<img id="legend" src="assets/img/wealth.png" style="width:200px;height:275px;">
+	<img id="legend" src="assets/img/traffic.png" style="width:200px;height:275px;">
+	<img id="legend" src="assets/img/air.png" style="width:200px;height:275px;">
+	<img id="legend" src="assets/img/water.png" style="width:200px;height:275px;">
+	<img id="legend" src="assets/img/crime.png" style="width:200px;height:275px;">
+  </body>
+</html>
